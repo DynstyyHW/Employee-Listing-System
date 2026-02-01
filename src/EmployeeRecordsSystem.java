@@ -190,19 +190,13 @@ public class EmployeeRecordsSystem {
     } // end of changeDataProgram
 
     private Employee interviewEmployee() {
-        System.out.print("Input your ID Number: ");
-            String catchID = scan.nextLine();
-        System.out.print("Input your First Name: ");
-            String catchFirstName = scan.nextLine();
-        System.out.print("Input your Middle Name: ");
-            String catchMiddleName = scan.nextLine();
-        System.out.print("Input your Last Name: ");
-            String catchLastName = scan.nextLine();
-            int catchAge = readNumber("Input your age: ", 18, 120);
-        System.out.print("Input your Position: ");
-            String catchPosition = scan.nextLine();
-            double catchMonthlySalary = readNumber("Input your Salary per Month (at most 2 decimal places): ", 2500.00, 100000.00);
-
+       String catchID = readString("Input your ID Number: ");
+        String catchFirstName = readString("Input your First Name: ");
+        String catchMiddleName = readString("Input your Middle Name: ");
+        String catchLastName = readString("Input your Last Name: ");
+        int catchAge = readNumber("Input your age: ", 18, 120);
+        String catchPosition = readString("Input your Position: ");
+        double catchMonthlySalary = readNumber("Input your Salary per Month (at most 2 decimal places): ", 2500.00, 100000.00);
         return new Employee(catchID, catchFirstName, catchMiddleName, catchLastName, catchPosition, catchAge, catchMonthlySalary);
     } // end of interviewEmployee()
 

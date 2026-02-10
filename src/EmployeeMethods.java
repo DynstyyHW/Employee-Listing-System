@@ -4,7 +4,6 @@ public class EmployeeMethods {
     private String record3Status;
     private String record4Status;
     private String record5Status;
-    private String records;
 
     public EmployeeMethods() {
         record1Status = "1. Record 1 [UNUSED]";
@@ -46,9 +45,7 @@ public class EmployeeMethods {
     public void setRecord5Status(String newRecord5Status) {
         record5Status = newRecord5Status;
     }
-
-
-    // add more stuff here in the future
+    
     public void employeeListHeader() {
         System.out.printf("%-10s || %-13s || %-30s || %-3s || %-30s || %-16s ||",
                 "Record No.","ID No.","Name","Age","Position","Monthly Salary");

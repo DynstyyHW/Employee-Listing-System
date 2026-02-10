@@ -36,8 +36,9 @@ public class EmployeeRecordsSystem {
                             1. Create new data list [REQUIRED IF PROGRAM JUST STARTED]
                             2. View specific record (unsorted)
                             3. View specific record (with different sorts)
-                            4. Change items in a specific record
-                            5. Exit Program
+                            4. Merge 2 records
+                            5. Change items in a specific record
+                            6. Exit Program
                             """);
         choice = readNumber("Input choice here: ", 1, 6);
         switch (choice) {
@@ -45,7 +46,8 @@ public class EmployeeRecordsSystem {
             case 2 -> viewRecordsProgram();
             case 3 -> sortRecordsProgram();
             case 4 -> changeDataProgram();
-            case 5 -> {
+            case 5 -> mergeRecords();
+            case 6 -> {
                 System.out.println("\nClosing System... Goodbye.");
                 System.exit(0);
             }
@@ -129,6 +131,36 @@ public class EmployeeRecordsSystem {
         run(); // back to mainProgram
     } // end of sortRecordsProgram()
 
+    public void mergeRecords() throws Exception {
+        System.out.println("\nPick two records that you would like to merge together:");
+            status.viewRecordStatus();
+        System.out.println("6. Back to Main Menu");
+        int firstNum = readNumber("Input 1st record (the merged list will be placed here): ", 1, 6);
+            if (firstNum == 6)
+                run();
+            currentRecord = currentRecordChoice(firstNum);
+            Employee[] first = currentRecordChoice(firstNum);
+        int secondNum = readNumber("Input 2nd record (this record will reset to be unused after the merge): ", 1, 6);
+            if (secondNum == 6)
+                run();
+            Employee[] second = currentRecordChoice(secondNum);
+        
+            updateRecordInformation(firstNum, first.length + second.length);
+            resetRecordInformation(secondNum);
+                currentRecord = new Employee[first.length + second.length];
+        
+            for (int count = 0; count < first.length; count++) {
+                currentRecord[count] = first[count];
+            }
+            for (int count = first.length; count < second.length + first.length; count++) {
+                int y = count - first.length;
+                currentRecord[count] = second[y];
+            }
+        showRecord(currentRecord);
+        updateRecordData(firstNum);
+        run();
+    } // end of mergeRecords()
+
     private void changeDataProgram() throws Exception {
         System.out.println("\nWhich record would you like to use?");
             statusMethods.viewRecordStatus();
@@ -187,7 +219,7 @@ public class EmployeeRecordsSystem {
                 if (choice == 1) repeat = true;
                     else run();
         } while (repeat);
-    } // end of changeDataProgram
+    } // end of changeDataProgram()
 
     private Employee interviewEmployee() {
        String catchID = readString("Input your ID Number: ");
@@ -292,6 +324,16 @@ public class EmployeeRecordsSystem {
             case 3 -> statusMethods.setRecord3Status("3. Record 3 [" + quantity + " Employee/s Listed]");
             case 4 -> statusMethods.setRecord4Status("4. Record 4 [" + quantity + " Employee/s Listed]");
             case 5 -> statusMethods.setRecord5Status("5. Record 5 [" + quantity + " Employee/s Listed]");
+        }
+    }
+
+     private void resetRecordInformation(int input) throws Exception {
+        switch (input) {
+            case 1 -> status.setRecord1Status("1. Record 1 [UNUSED]");
+            case 2 -> status.setRecord2Status("2. Record 2 [UNUSED]");
+            case 3 -> status.setRecord3Status("3. Record 3 [UNUSED]");
+            case 4 -> status.setRecord4Status("4. Record 4 [UNUSED]");
+            case 5 -> status.setRecord5Status("5. Record 5 [UNUSED]");
         }
     }
 

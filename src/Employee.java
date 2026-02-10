@@ -7,6 +7,16 @@ public class Employee {
     private int age;
     private double monthlySalary;
 
+    public Employee() {
+        id = "";
+        firstName = "";
+        middleName = "";
+        lastName = "";
+        position = "";
+        age = 0;
+        monthlySalary = 0;
+    }
+
     public Employee(String catchID, String catchFirstName, String catchMiddleName, String catchLastName,
                     String catchPosition, int catchAge, double catchMonthlySalary) {
         id = catchID;

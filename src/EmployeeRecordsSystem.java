@@ -54,6 +54,9 @@ public class EmployeeRecordsSystem {
         }
     } // end of run()
 
+    /**
+    lorem ipsum
+    */
     private void inputEmployeeProgram() throws Exception {
         System.out.println("\nWhich record would you like to view?");
             statusMethods.viewRecordStatus();

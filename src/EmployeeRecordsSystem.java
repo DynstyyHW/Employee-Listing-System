@@ -9,6 +9,7 @@ public class EmployeeRecordsSystem {
     static Employee[] record3;
     static Employee[] record4;
     static Employee[] record5;
+    static Employee delete;
 
     static EmployeeMethods statusMethods = new EmployeeMethods();
     static EmployeeMethods listMethods = new EmployeeMethods();
@@ -28,26 +29,31 @@ public class EmployeeRecordsSystem {
     } // end of main()
 
     public void run() throws Exception {
-        System.out.println("\nWelcome to the DXM Employee Data Systems Program!\n" +
-                "Main Menu\n" +
-                "----------------------------------------------------");
-        System.out.print("""
-                            Which program would you like to use?
-                            1. Create new data list [REQUIRED IF PROGRAM JUST STARTED]
-                            2. View specific record (unsorted)
-                            3. View specific record (with different sorts)
-                            4. Merge 2 records
-                            5. Change items in a specific record
-                            6. Exit Program
-                            """);
-        choice = readNumber("Input choice here: ", 1, 6);
+        System.out.println("""
+                            Welcome to the DXM Employee Data Systems Program!
+                            
+                            MAIN MENU
+                            ---------------------------------------------------------------
+                            Which program would you like to use?                         ||
+                            1. Create new data list [REQUIRED IF PROGRAM JUST STARTED]   ||
+                            2. Add employee/s to a used record                           ||
+                            3. Remove employee/s to a used record                        ||
+                            4. View specific record (unsorted)                           ||
+                            5. View specific record (with different sorts)               ||
+                            6. Merge 2 records                                           ||
+                            7. Change items in a specific record                         ||
+                            8. Exit Program                                              ||
+                            ---------------------------------------------------------------""");
+        choice = readNumber("Input choice here: ", 1, 8);
         switch (choice) {
             case 1 -> inputEmployeeProgram();
-            case 2 -> viewRecordsProgram();
-            case 3 -> sortRecordsProgram();
-            case 4 -> changeDataProgram();
-            case 5 -> mergeRecords();
-            case 6 -> {
+            case 2 -> addEmployeeProgram();
+            case 3 -> removeEmployeeProgram();
+            case 4 -> viewRecordsProgram();
+            case 5 -> sortRecordsProgram();
+            case 6 -> mergeRecordsProgram();
+            case 7 -> changeDataProgram();
+            case 8 -> {
                 System.out.println("\nClosing System... Goodbye.");
                 System.exit(0);
             }
@@ -55,8 +61,8 @@ public class EmployeeRecordsSystem {
     } // end of run()
 
     /**
-    lorem ipsum
-    */
+     Asks the user to input the amount of data to be inputted in a record.
+     */
     private void inputEmployeeProgram() throws Exception {
         System.out.println("\nWhich record would you like to view?");
             statusMethods.viewRecordStatus();
@@ -76,10 +82,12 @@ public class EmployeeRecordsSystem {
         System.out.println("\nFinished inputting every employee's data!\n");
 
         updateRecordData(choice);
-
-        run();
+        back();
     } // end of inputEmployeeProgram()
 
+    /**
+     Asks the user to input the which record will be viewed
+     */
     private void viewRecordsProgram() throws Exception {
         System.out.println("\nWhich record would you like to use?");
             statusMethods.viewRecordStatus();
@@ -87,9 +95,12 @@ public class EmployeeRecordsSystem {
             currentRecord = currentRecordChoice(choice);
 
         showRecord(currentRecord);
-        run(); // back to mainProgram
+        back(); // back to mainProgram
     } // end of viewRecordsProgram()
 
+    /**
+    Asks the user how the list should be sorted
+     */
     private void sortRecordsProgram() throws Exception {
         System.out.println("\nWhich record would you like to use?");
             statusMethods.viewRecordStatus();
@@ -131,12 +142,15 @@ public class EmployeeRecordsSystem {
                 case 13 -> { return; }
             }
         showRecord(currentRecord);
-        run(); // back to mainProgram
+        back(); // back to mainProgram
     } // end of sortRecordsProgram()
 
-    public void mergeRecords() throws Exception {
+    /**
+     Asks the user which records will be merged together
+     */
+    private void mergeRecordsProgram() throws Exception {
         System.out.println("\nPick two records that you would like to merge together:");
-            status.viewRecordStatus();
+            statusMethods.viewRecordStatus();
         System.out.println("6. Back to Main Menu");
         int firstNum = readNumber("Input 1st record (the merged list will be placed here): ", 1, 6);
             if (firstNum == 6)
@@ -151,19 +165,113 @@ public class EmployeeRecordsSystem {
             updateRecordInformation(firstNum, first.length + second.length);
             resetRecordInformation(secondNum);
                 currentRecord = new Employee[first.length + second.length];
-        
+
             for (int count = 0; count < first.length; count++) {
                 currentRecord[count] = first[count];
             }
+
             for (int count = first.length; count < second.length + first.length; count++) {
                 int y = count - first.length;
                 currentRecord[count] = second[y];
             }
         showRecord(currentRecord);
         updateRecordData(firstNum);
-        run();
-    } // end of mergeRecords()
+        back();
+    } // end of mergeRecordsProgram()
 
+    /**
+     Asks the user how many more employees will be added
+     */
+    public void addEmployeeProgram() throws Exception {
+        System.out.println("\nWhich record would you like to use?");
+            statusMethods.viewRecordStatus();
+        choice = readNumber("Input choice here: ", 1, 6);
+            currentRecord = currentRecordChoice(choice);
+
+            showRecord(currentRecord);
+
+            int additional = readNumber("How many more employees would you like to add in this record: ",
+                                        1, 55 - currentRecord.length);
+            Employee[] temp = currentRecord;
+            Employee[] newEmployees = new Employee[additional];
+            updateRecordInformation(choice, temp.length + newEmployees.length);
+            currentRecord = new Employee[temp.length + newEmployees.length];
+
+            System.out.println("New employee will now be added to this record!");
+                for (int count = 0; count < newEmployees.length; count++) {
+                    System.out.println("\nInputting the record for Employee No." + (temp.length + (count + 1)) + "...");
+                    newEmployees[count] = interviewEmployee();
+                }
+            System.out.println("\nFinished inputting every new employee's data!");
+
+            for (int count = 0; count < temp.length; count++) {
+                currentRecord[count] = temp[count];
+            }
+
+            for (int count = newEmployees.length; count < newEmployees.length + temp.length; count++) {
+                int y = count - temp.length;
+                currentRecord[count] = newEmployees[y];
+            }
+
+        showRecord(currentRecord);
+        updateRecordData(choice);
+        back();
+    } // end of addEmployeeProgram()
+
+    /**
+     Asks the user which employee's record will be deleted
+     */
+    public void removeEmployeeProgram() throws Exception {
+
+        System.out.println("\nWhich record would you like to use?");
+            statusMethods.viewRecordStatus();
+        choice = readNumber("Input choice here: ", 1, 6);
+            currentRecord = currentRecordChoice(choice);
+            Employee[] temp = currentRecord;
+        do {
+            repeat = false;
+            showRecord(currentRecord);
+
+            int recordNo = readNumber("\nWhich Record No. would you like to delete: ", 1, currentRecord.length);
+                Employee currentEmployee = currentRecord[recordNo - 1];
+            System.out.println("\nRecord of Employee No." + recordNo);
+                listMethods.employeeListHeader();
+            System.out.println();
+                currentEmployee.showEmployeeData(recordNo - 1);
+            System.out.println();
+            String sureBall = readString("Are you sure you want to delete this employee's record? (Yes or No): ");
+
+            if (sureBall.equalsIgnoreCase("Yes")) {
+                for (int count = 0; count < temp.length; count++) {
+                    if (currentEmployee == temp[count]) {
+                        delete = temp[count];
+                        temp[count] = temp[temp.length - 1];
+                        temp[temp.length - 1] = delete;
+                    }
+                }
+
+                currentRecord = new Employee[temp.length - 1];
+                updateRecordInformation(choice, currentRecord.length);
+
+                for (int index = 0; index < temp.length - 1; index++) {
+                    currentRecord[index] = temp[index];
+                }
+            } else if (sureBall.equalsIgnoreCase("No")) {
+                repeat = true;
+            } else {
+                System.out.println("Invalid Input (Result is not 'Yes' or 'No'. Please try again...");
+                repeat = true;
+            }
+        } while (repeat);
+            
+        showRecord(currentRecord);
+        updateRecordData(choice);
+        back();
+    } // end of removeEmployeeProgram()
+
+    /**
+     Asks the user which data of the employee should be changed (except for name)
+     */
     private void changeDataProgram() throws Exception {
         System.out.println("\nWhich record would you like to use?");
             statusMethods.viewRecordStatus();
@@ -190,7 +298,7 @@ public class EmployeeRecordsSystem {
                     5. Back to Selection of Record No.
                     
                     """);
-            choice = readNumber("Input choice here: ", 1, 8);
+            choice = readNumber("Input choice here: ", 1, 5);
                 switch (choice) {
                     case 1 -> {
                         System.out.println("Current ID Number: " + currentEmployee.getId());
@@ -224,17 +332,23 @@ public class EmployeeRecordsSystem {
         } while (repeat);
     } // end of changeDataProgram()
 
+    /**
+     Asks the user of the data of the employees
+     */
     private Employee interviewEmployee() {
-       String catchID = readString("Input your ID Number: ");
+        String catchID = readString("Input your ID Number: ");
         String catchFirstName = readString("Input your First Name: ");
         String catchMiddleName = readString("Input your Middle Name: ");
         String catchLastName = readString("Input your Last Name: ");
-        int catchAge = readNumber("Input your age: ", 18, 120);
+        int catchAge = readNumber("Input your Age: ", 18, 120);
         String catchPosition = readString("Input your Position: ");
         double catchMonthlySalary = readNumber("Input your Salary per Month (at most 2 decimal places): ", 2500.00, 100000.00);
         return new Employee(catchID, catchFirstName, catchMiddleName, catchLastName, catchPosition, catchAge, catchMonthlySalary);
     } // end of interviewEmployee()
 
+    /**
+     Shows record of each employee using a for-loop
+     */
     private void showRecord(Employee[] recordForView) {
         listMethods.employeeListHeader();
         System.out.println();
@@ -295,6 +409,19 @@ public class EmployeeRecordsSystem {
         return scan.nextLine();
     } // end of readString()
 
+    public void back() throws Exception {
+        System.out.print("Press the [ENTER] key to continue");
+            String enter = scan.nextLine();
+            do {
+                if (enter.isEmpty())
+                    run();
+                else {
+                    enter = "";
+                    repeat = true;
+                }
+            } while (repeat);
+    }
+
     /**
      Record Methods
      */
@@ -310,7 +437,7 @@ public class EmployeeRecordsSystem {
         return currentRecord;
     }
 
-    private void updateRecordData(int input) throws Exception {
+    private void updateRecordData(int input) {
         switch (input) {
             case 1 -> record1 = currentRecord;
             case 2 -> record2 = currentRecord;
@@ -320,7 +447,7 @@ public class EmployeeRecordsSystem {
         }
     }
 
-    private void updateRecordInformation(int input, int quantity) throws Exception {
+    private void updateRecordInformation(int input, int quantity) {
         switch (input) {
             case 1 -> statusMethods.setRecord1Status("1. Record 1 [" + quantity + " Employee/s Listed]");
             case 2 -> statusMethods.setRecord2Status("2. Record 2 [" + quantity + " Employee/s Listed]");
@@ -330,13 +457,13 @@ public class EmployeeRecordsSystem {
         }
     }
 
-     private void resetRecordInformation(int input) throws Exception {
+     private void resetRecordInformation(int input) {
         switch (input) {
-            case 1 -> status.setRecord1Status("1. Record 1 [UNUSED]");
-            case 2 -> status.setRecord2Status("2. Record 2 [UNUSED]");
-            case 3 -> status.setRecord3Status("3. Record 3 [UNUSED]");
-            case 4 -> status.setRecord4Status("4. Record 4 [UNUSED]");
-            case 5 -> status.setRecord5Status("5. Record 5 [UNUSED]");
+            case 1 -> statusMethods.setRecord1Status("1. Record 1 [UNUSED]");
+            case 2 -> statusMethods.setRecord2Status("2. Record 2 [UNUSED]");
+            case 3 -> statusMethods.setRecord3Status("3. Record 3 [UNUSED]");
+            case 4 -> statusMethods.setRecord4Status("4. Record 4 [UNUSED]");
+            case 5 -> statusMethods.setRecord5Status("5. Record 5 [UNUSED]");
         }
     }
 
